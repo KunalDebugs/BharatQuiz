@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bharat Quiz — 28 States of India</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗺️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c2a33;
+    --ink-soft:#5a6a73;
+    --ink-faint:#8a97a0;
+    --paper:#f1f2ec;
+    --panel:#ffffff;
+    --line:#dcdcd2;
+    --line-strong:#1c2a33;
+    --gold:#a97b34;
+    --gold-soft:#f1e6d2;
+    --navy:#233c53;
+    --navy-deep:#152634;
+    --good:#3f6b52;
+    --good-bg:#e6efe8;
+    --bad:#9c4638;
+    --bad-bg:#f5e6e2;
+    --radius:3px;
+    --radius-lg:6px;
+    --shadow-sm:0 1px 2px rgba(28,42,51,0.06);
+    --shadow-md:0 6px 20px -8px rgba(28,42,51,0.25);
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    min-height:100vh;
+    line-height:1.5;
+    background-image:
+      radial-gradient(circle at 100% 0%, rgba(169,123,52,0.06), transparent 45%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(28,42,51,0.03) 40px);
+  }
+  ::selection{ background:var(--gold-soft); }
+  .wrap{
+    max-width:900px;
+    margin:0 auto;
+    padding:44px 24px 80px;
+    min-height:100vh;
+  }
+  header.masthead{
+    border-bottom:2px solid var(--line-strong);
+    padding-bottom:18px;
+    margin-bottom:36px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  header.masthead .brand{ display:flex; align-items:baseline; gap:12px; }
+  header.masthead .title{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(26px,4.6vw,36px);
+    letter-spacing:-0.01em;
+  }
+  header.masthead .tagline{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-style:italic;
+    font-family:var(--serif);
+  }
+  header.masthead .stat-pill{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    padding:5px 10px;
+    border-radius:20px;
+    background:var(--panel);
+  }
+  .screen{ display:none; }
+  .screen.active{ display:block; animation:fade .4s cubic-bezier(.2,.7,.3,1); }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  @keyframes popIn{ from{opacity:0; transform:scale(.94);} to{opacity:1; transform:scale(1);} }
+  @keyframes shake{ 10%,90%{transform:translateX(-1px);} 20%,80%{transform:translateX(2px);} 30%,50%,70%{transform:translateX(-4px);} 40%,60%{transform:translateX(4px);} }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.45;} }
+
+  /* ---- controls row: search + region chips ---- */
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:16px;
+  }
+  .search-box{
+    position:relative;
+    flex:1 1 220px;
+  }
+  .search-box input{
+    width:100%;
+    padding:11px 14px 11px 34px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    font-family:var(--sans);
+    font-size:14px;
+    border-radius:var(--radius);
+    color:var(--ink);
+  }
+  .search-box input:focus{ outline:2px solid var(--navy); outline-offset:1px; }
+  .search-box svg{
+    position:absolute; left:11px; top:50%; transform:translateY(-50%);
+    width:15px; height:15px; opacity:.5;
+  }
+  .chip-row{ display:flex; gap:7px; flex-wrap:wrap; }
+  .chip{
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--ink-soft);
+    font-size:12.5px;
+    font-weight:600;
+    padding:8px 13px;
+    border-radius:20px;
+    cursor:pointer;
+    font-family:var(--sans);
+    transition:all .15s ease;
+  }
+  .chip:hover{ border-color:var(--navy); color:var(--ink); }
+  .chip.active{ background:var(--navy); border-color:var(--navy); color:#fff; }
+
+  .section-label{
+    font-size:12px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:14px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-label .step-n{
+    width:18px;height:18px;
+    border-radius:50%;
+    background:var(--navy);
+    color:#fff;
+    font-size:10.5px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+  }
+
+  /* ---- state grid ---- */
+  .state-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(160px,1fr));
+    gap:10px;
+    margin-bottom:14px;
+    max-height:420px;
+    overflow-y:auto;
+    padding:4px 4px 4px 0;
+  }
+  .state-grid::-webkit-scrollbar{ width:6px; }
+  .state-grid::-webkit-scrollbar-thumb{ background:var(--line); border-radius:4px; }
+  .state-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:14px 14px 12px;
+    cursor:pointer;
+    text-align:left;
+    font-family:var(--sans);
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--ink);
+    transition:border-color .15s ease, background .15s ease, transform .1s ease, box-shadow .15s ease;
+    border-radius:var(--radius);
+    position:relative;
+  }
+  .state-card .region-tag{
+    display:block;
+    font-weight:600;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--gold);
+    margin-bottom:5px;
+  }
+  .state-card .count{
+    display:block;
+    font-weight:400;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  .state-card .best{
+    display:block;
+    font-weight:600;
+    font-size:10.5px;
+    color:var(--good);
+    margin-top:5px;
+  }
+  .state-card:hover{ border-color:var(--navy); background:#fbfbf8; transform:translateY(-1px); box-shadow:var(--shadow-sm); }
+  .state-card.selected{
+    border-color:var(--navy);
+    background:var(--navy);
+    color:#fff;
+    box-shadow:var(--shadow-md);
+  }
+  .state-card.selected .region-tag{ color:#d9c69a; }
+  .state-card.selected .count{ color:#c7d2dc; }
+  .state-card.selected .best{ color:#a9e0bf; }
+  .state-card.hidden{ display:none; }
+  .empty-note{ font-size:13px; color:var(--ink-faint); padding:14px 4px; font-style:italic; }
+
+  /* ---- category + duration rows ---- */
+  .pill-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+  .pill-btn{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:13px 20px;
+    cursor:pointer;
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:14px;
+    border-radius:var(--radius);
+    color:var(--ink);
+    transition:all .15s ease;
+  }
+  .pill-btn:hover{ border-color:var(--navy); }
+  .pill-btn.selected{ border-color:var(--navy); background:var(--gold-soft); }
+
+  .duration-btn{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:14px 18px;
+    cursor:pointer;
+    font-family:var(--sans);
+    border-radius:var(--radius);
+    min-width:82px;
+    text-align:center;
+    transition:all .15s ease;
+  }
+  .duration-btn .num{ display:block; font-family:var(--serif); font-size:24px; font-weight:600; line-height:1; }
+  .duration-btn .unit{ display:block; font-size:10.5px; color:var(--ink-soft); margin-top:4px; text-transform:uppercase; letter-spacing:.05em; }
+  .duration-btn:hover{ border-color:var(--navy); transform:translateY(-1px); }
+  .duration-btn.selected{ border-color:var(--navy); background:var(--gold-soft); }
+
+  .start-row{ margin-top:30px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .btn-primary{
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    padding:15px 32px;
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    border-radius:var(--radius);
+    letter-spacing:.01em;
+    transition:background .15s ease, transform .08s ease;
+    box-shadow:var(--shadow-sm);
+  }
+  .btn-primary:disabled{ background:#b7bfc5; cursor:not-allowed; box-shadow:none; }
+  .btn-primary:not(:disabled):hover{ background:var(--navy-deep); }
+  .btn-primary:not(:disabled):active{ transform:scale(.97); }
+  .btn-ghost{
+    background:none; border:none; color:var(--ink-soft); font-family:var(--sans);
+    font-size:14px; cursor:pointer; text-decoration:underline; text-underline-offset:3px; padding:0;
+  }
+  .btn-ghost:hover{ color:var(--ink); }
+
+  /* ---- quiz screen ---- */
+  .quiz-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:28px;
+    box-shadow:var(--shadow-md);
+  }
+  .quiz-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:22px;
+    gap:16px;
+  }
+  .quiz-state-block .quiz-state{ font-family:var(--serif); font-size:21px; font-weight:600; }
+  .quiz-state-block .quiz-region{ font-size:11.5px; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; font-weight:700; margin-top:2px; }
+
+  .timer-ring{
+    --pct:100;
+    width:62px; height:62px; border-radius:50%;
+    background:conic-gradient(var(--navy) calc(var(--pct)*1%), var(--line) 0);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    transition:background .3s linear;
+    position:relative;
+  }
+  .timer-ring.low{ background:conic-gradient(var(--bad) calc(var(--pct)*1%), var(--line) 0); animation:pulse 1s infinite; }
+  .timer-ring .ring-inner{
+    width:48px; height:48px; border-radius:50%;
+    background:var(--panel);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-weight:700; font-size:13px;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .stat-strip{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .stat-strip b{ color:var(--ink); font-family:var(--serif); font-size:15px; margin-right:4px; }
+  .streak-tag{
+    color:var(--gold);
+    font-weight:700;
+  }
+
+  .q-category{
+    display:inline-block;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:12px;
+    border:1px solid var(--gold-soft);
+    background:var(--gold-soft);
+    padding:4px 10px;
+    border-radius:20px;
+  }
+  .q-text{
+    font-family:var(--serif);
+    font-size:clamp(19px,3.2vw,24px);
+    font-weight:500;
+    line-height:1.35;
+    margin-bottom:26px;
+    min-height:56px;
+  }
+  .options{ display:grid; gap:10px; margin-bottom:20px; }
+  .option{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:14px 16px;
+    text-align:left;
+    font-family:var(--sans);
+    font-size:15px;
+    cursor:pointer;
+    border-radius:var(--radius);
+    color:var(--ink);
+    transition:border-color .12s ease, background .12s ease, transform .08s ease;
+  }
+  .option .letter{
+    font-family:var(--serif); font-weight:700; color:var(--ink-soft);
+    width:22px; height:22px; flex-shrink:0;
+    border:1px solid var(--line);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px;
+  }
+  .option:hover:not(.locked){ border-color:var(--navy); background:#fbfbf8; }
+  .option:active:not(.locked){ transform:scale(.99); }
+  .option.correct{ border-color:var(--good); background:var(--good-bg); animation:popIn .25s ease; }
+  .option.correct .letter{ color:var(--good); border-color:var(--good); }
+  .option.wrong{ border-color:var(--bad); background:var(--bad-bg); animation:shake .35s ease; }
+  .option.wrong .letter{ color:var(--bad); border-color:var(--bad); }
+  .option.locked{ cursor:default; }
+
+  .quiz-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:12.5px;
+    color:var(--ink-faint);
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  .kbd-hint{ display:flex; gap:4px; align-items:center; }
+  .kbd-hint kbd{
+    border:1px solid var(--line); border-bottom-width:2px; border-radius:4px;
+    padding:1px 6px; font-family:var(--sans); font-size:11px; background:#fafaf6;
+  }
+
+  /* ---- results ---- */
+  .score-block{
+    text-align:center;
+    padding:38px 20px;
+    border:1px solid var(--line-strong);
+    margin-bottom:24px;
+    background:var(--panel);
+    border-radius:var(--radius-lg);
+    position:relative;
+    overflow:hidden;
+  }
+  .score-block .new-best{
+    position:absolute; top:14px; right:14px;
+    background:var(--gold); color:#fff;
+    font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    padding:5px 10px; border-radius:20px;
+  }
+  .score-block .big{ font-family:var(--serif); font-size:clamp(46px,10vw,62px); font-weight:700; line-height:1; }
+  .score-block .sub{ margin-top:8px; color:var(--ink-soft); font-size:14px; }
+  .score-block .best-line{ margin-top:10px; color:var(--ink-faint); font-size:12.5px; }
+
+  .breakdown{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; }
+  .stat-card{ border:1px solid var(--line); padding:16px; background:var(--panel); border-radius:var(--radius); }
+  .stat-card .label{ font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); margin-bottom:8px; }
+  .stat-card .val{ font-family:var(--serif); font-size:22px; font-weight:600; }
+  .stat-card .bar-track{ height:5px; background:var(--line); margin-top:8px; border-radius:3px; overflow:hidden; }
+  .stat-card .bar-fill{ height:100%; background:var(--navy); border-radius:3px; transition:width .6s ease; }
+
+  .result-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:28px; }
+  .btn-secondary{
+    border:1px solid var(--navy); background:none; color:var(--navy);
+    padding:13px 24px; font-family:var(--sans); font-weight:700; font-size:14px;
+    cursor:pointer; border-radius:var(--radius); transition:all .15s ease;
+  }
+  .btn-secondary:hover{ background:var(--navy); color:#fff; }
+  .btn-tertiary{
+    border:1px solid var(--line); background:var(--panel); color:var(--ink-soft);
+    padding:13px 20px; font-family:var(--sans); font-weight:600; font-size:13px;
+    cursor:pointer; border-radius:var(--radius);
+  }
+  .btn-tertiary:hover{ border-color:var(--navy); color:var(--ink); }
+
+  .review-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; padding:14px 0; border-top:1px solid var(--line);
+    font-family:var(--sans); font-weight:700; font-size:14px;
+  }
+  .review-toggle .arrow{ transition:transform .2s ease; }
+  .review-toggle.open .arrow{ transform:rotate(180deg); }
+  .review-list{ display:none; flex-direction:column; gap:10px; padding-bottom:10px; }
+  .review-list.open{ display:flex; }
+  .review-item{
+    border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px;
+    background:var(--panel);
+  }
+  .review-item.wrong{ border-left:3px solid var(--bad); }
+  .review-item.right{ border-left:3px solid var(--good); }
+  .review-item .rq{ font-size:14px; font-weight:600; margin-bottom:6px; }
+  .review-item .ra{ font-size:12.5px; color:var(--ink-soft); }
+  .review-item .ra .your{ color:var(--bad); font-weight:600; }
+  .review-item .ra .correct-ans{ color:var(--good); font-weight:600; }
+  .review-item .rcat{ font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--gold); font-weight:700; margin-bottom:5px; }
+
+  footer.foot{
+    margin-top:56px; padding-top:18px; border-top:1px solid var(--line);
+    font-size:12px; color:var(--ink-soft);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  #confettiCanvas{ position:fixed; inset:0; pointer-events:none; z-index:50; }
+
+  @media (prefers-reduced-motion: reduce){
+    .screen.active{ animation:none; }
+    .option.correct, .option.wrong{ animation:none; }
+    .timer-ring.low{ animation:none; }
+  }
+
+  @media (max-width:480px){
+    .wrap{ padding:28px 16px 56px; }
+    .quiz-card{ padding:20px; }
+    .breakdown{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<canvas id="confettiCanvas"></canvas>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="brand">
+      <div>
+        <div class="title">Bharat Quiz</div>
+        <div class="tagline">History &amp; geography, state by state</div>
+      </div>
+    </div>
+    <span class="stat-pill" id="headerCount">28 states · 224 questions</span>
+  </header>
+
+  <!-- SCREEN 1: setup -->
+  <section id="screen-setup" class="screen active">
+    <div class="section-label"><span class="step-n">1</span> Choose a state</div>
+
+    <div class="controls">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="stateSearch" placeholder="Search a state…" autocomplete="off">
+      </div>
+    </div>
+    <div class="chip-row" id="regionChips"></div>
+    <div style="height:14px;"></div>
+    <div class="state-grid" id="stateGrid"></div>
+    <div class="empty-note" id="emptyNote" style="display:none;">No states match your search.</div>
+
+    <div style="height:10px;"></div>
+    <div class="section-label"><span class="step-n">2</span> Choose a focus</div>
+    <div class="pill-row" id="categoryRow"></div>
+
+    <div class="section-label"><span class="step-n">3</span> Choose a duration</div>
+    <div class="pill-row" id="durationRow"></div>
+
+    <div class="start-row">
+      <button class="btn-primary" id="startBtn" disabled>Start quiz</button>
+      <span id="setupHint" style="font-size:13px;color:var(--ink-soft);">Pick a state and a duration to begin</span>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: quiz -->
+  <section id="screen-quiz" class="screen">
+    <div class="quiz-card">
+      <div class="quiz-top">
+        <div class="quiz-state-block">
+          <div class="quiz-state" id="quizStateName"></div>
+          <div class="quiz-region" id="quizRegion"></div>
+        </div>
+        <div class="timer-ring" id="timerRing"><div class="ring-inner" id="timerDisplay">0:00</div></div>
+      </div>
+
+      <div class="stat-strip">
+        <span><b id="scoreLive">0</b>score</span>
+        <span><b id="questionLive">1</b>question</span>
+        <span><b id="accuracyLive">0%</b>accuracy</span>
+        <span id="streakWrap" style="display:none;"><span class="streak-tag" id="streakLive">🔥 2 in a row</span></span>
+      </div>
+
+      <div class="q-category" id="qCategory">History</div>
+      <div class="q-text" id="qText">Loading question…</div>
+      <div class="options" id="qOptions"></div>
+
+      <div class="quiz-footer">
+        <span class="kbd-hint">Press <kbd>1</kbd>–<kbd>4</kbd> to answer</span>
+        <button class="btn-ghost" id="endEarlyBtn">End quiz now</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 3: results -->
+  <section id="screen-results" class="screen">
+    <div class="section-label" id="resultsStateLabel">Results</div>
+    <div class="score-block">
+      <span class="new-best" id="newBestBadge" style="display:none;">New best</span>
+      <div class="big" id="resultScore">0 / 0</div>
+      <div class="sub" id="resultAccuracy">0% correct</div>
+      <div class="best-line" id="bestLine"></div>
+    </div>
+    <div class="breakdown">
+      <div class="stat-card">
+        <div class="label">History</div>
+        <div class="val" id="statHistory">0 / 0</div>
+        <div class="bar-track"><div class="bar-fill" id="barHistory" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Geography</div>
+        <div class="val" id="statGeo">0 / 0</div>
+        <div class="bar-track"><div class="bar-fill" id="barGeo" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-primary" id="retryBtn">Play again — same setup</button>
+      <button class="btn-secondary" id="changeStateBtn">Choose a different state</button>
+      <button class="btn-tertiary" id="copyResultBtn">Copy result</button>
+    </div>
+
+    <div class="review-toggle" id="reviewToggle">
+      <span>Review every question from this round</span>
+      <span class="arrow">▾</span>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+  </section>
+
+  <footer class="foot">
+    <span>Questions are drawn at random and repeat if a round runs long.</span>
+    <span id="stateCountFoot"></span>
+  </footer>
+
+</div>
+
+<script>
+/* ============ QUESTION BANK: 28 states ============ */
+const QUESTIONS = {
+"Rajasthan": {region:"North", items:[
+  {c:"History", q:"Which dynasty historically ruled from Mehrangarh Fort in Jodhpur?", o:["Rathore","Sisodia","Kachwaha","Chauhan"], a:0},
+  {c:"History", q:"The Battle of Haldighati (1576), fought by Maharana Pratap, was against the forces of which Mughal emperor?", o:["Babur","Humayun","Akbar","Jahangir"], a:2},
+  {c:"History", q:"Jaipur was founded in 1727 as a planned city by which ruler?", o:["Sawai Jai Singh II","Rana Kumbha","Rao Jodha","Prithviraj Chauhan"], a:0},
+  {c:"History", q:"The mass self-immolation by women to avoid capture, associated with Chittorgarh's sieges, is known as:", o:["Purdah","Jauhar","Sati","Satyagraha"], a:1},
+  {c:"Geography", q:"Rajasthan's Thar Desert is also widely known as the:", o:["Deccan Desert","Great Indian Desert","Rann Desert","Malwa Desert"], a:1},
+  {c:"Geography", q:"Which is the only major perennial river flowing through Rajasthan?", o:["Luni","Sabarmati","Chambal","Banas"], a:2},
+  {c:"Geography", q:"Mount Abu, Rajasthan's only hill station, sits within which range?", o:["Aravalli Range","Vindhya Range","Satpura Range","Western Ghats"], a:0},
+  {c:"Geography", q:"Which is one of India's largest inland saline (salt) lakes, located in Rajasthan?", o:["Pushkar Lake","Fatehsagar Lake","Sambhar Lake","Jaisamand Lake"], a:2}
+]},
+"Kerala": {region:"South", items:[
+  {c:"History", q:"The ancient port of Muziris connected Kerala's spice trade most notably with which civilisation?", o:["Romans","Vikings","Mongols","Aztecs"], a:0},
+  {c:"History", q:"\"Zamorin\" was the historical ruling title associated with which Kerala city-kingdom?", o:["Kochi","Kozhikode (Calicut)","Thiruvananthapuram","Kollam"], a:1},
+  {c:"History", q:"Vasco da Gama landed at Kappad, near Kozhikode, in which year?", o:["1398","1498","1526","1600"], a:1},
+  {c:"History", q:"Kerala state was formed in 1956 by merging Travancore-Cochin with which region?", o:["Malabar district","Coorg","Mysore","Goa"], a:0},
+  {c:"Geography", q:"Kerala's network of interconnected lagoons, canals and lakes along the coast is known as the:", o:["Sundarbans","Backwaters","Rann","Ghats"], a:1},
+  {c:"Geography", q:"Which mountain range forms Kerala's entire eastern border?", o:["Aravalli Range","Eastern Ghats","Western Ghats","Vindhya Range"], a:2},
+  {c:"Geography", q:"Anamudi, Kerala's (and South India's) highest peak, rises in which hills?", o:["Nilgiri Hills","Anaimalai Hills","Palani Hills","Cardamom Hills"], a:1},
+  {c:"Geography", q:"Which Kerala hill station is best known for its tea and spice plantations?", o:["Munnar","Wayanad","Thekkady","Ponmudi"], a:0}
+]},
+"Tamil Nadu": {region:"South", items:[
+  {c:"History", q:"The Brihadeeswarar Temple in Thanjavur was built under which dynasty?", o:["Pallava","Pandya","Chola","Chera"], a:2},
+  {c:"History", q:"The ancient Tamil literary academies known as the Sangams were most closely associated with which city?", o:["Madurai","Kanchipuram","Thanjavur","Trichy"], a:0},
+  {c:"History", q:"The Brihadeeswarar Temple was commissioned around 1010 CE by which Chola king?", o:["Rajendra Chola I","Raja Raja Chola I","Kulothunga Chola I","Vijayalaya"], a:1},
+  {c:"History", q:"Puducherry was, for most of the colonial era, a territory controlled primarily by which European power?", o:["Portuguese","Dutch","French","Danish"], a:2},
+  {c:"Geography", q:"Tamil Nadu's coastline lies along which body of water?", o:["Arabian Sea","Bay of Bengal","Laccadive Sea only","Gulf of Kutch"], a:1},
+  {c:"Geography", q:"Which hill station in the Nilgiris is known as the \"Queen of Hill Stations\"?", o:["Kodaikanal","Yercaud","Ooty (Udhagamandalam)","Coonoor"], a:2},
+  {c:"Geography", q:"The fertile Kaveri (Cauvery) delta region, Tamil Nadu's rice bowl, is centred on which district?", o:["Madurai","Thanjavur","Salem","Vellore"], a:1},
+  {c:"Geography", q:"Which strait separates Tamil Nadu from Sri Lanka?", o:["Palk Strait","Malacca Strait","Ten Degree Channel","Gulf of Mannar Strait"], a:0}
+]},
+"Maharashtra": {region:"West", items:[
+  {c:"History", q:"Chhatrapati Shivaji Maharaj founded which 17th-century empire?", o:["Mughal Empire","Maratha Empire","Vijayanagara Empire","Maurya Empire"], a:1},
+  {c:"History", q:"Which fort served as Shivaji's capital?", o:["Raigad Fort","Sinhagad Fort","Panhala Fort","Pratapgad Fort"], a:0},
+  {c:"History", q:"The Peshwas, hereditary prime ministers of the Maratha empire, were based mainly in which city?", o:["Nagpur","Pune","Nashik","Kolhapur"], a:1},
+  {c:"History", q:"The 1942 Quit India Movement was launched from a Mumbai ground now called:", o:["Shivaji Park","August Kranti Maidan","Azad Maidan","Oval Maidan"], a:1},
+  {c:"Geography", q:"The Western Ghats, as they run through Maharashtra, are locally known as the:", o:["Sahyadri","Nilgiris","Satpura","Vindhya"], a:0},
+  {c:"Geography", q:"Which river's basin dominates the Deccan Plateau across central Maharashtra?", o:["Krishna","Godavari","Tapi","Narmada"], a:1},
+  {c:"Geography", q:"The Ajanta and Ellora cave complexes lie near which Maharashtra city?", o:["Nashik","Aurangabad (Chhatrapati Sambhajinagar)","Nagpur","Pune"], a:1},
+  {c:"Geography", q:"Mumbai's natural harbour opens onto which sea?", o:["Bay of Bengal","Arabian Sea","Laccadive Sea","Andaman Sea"], a:1}
+]},
+"Uttar Pradesh": {region:"North", items:[
+  {c:"History", q:"The Taj Mahal in Agra was commissioned by which Mughal emperor?", o:["Akbar","Jahangir","Shah Jahan","Aurangzeb"], a:2},
+  {c:"History", q:"Varanasi (Kashi), one of the world's oldest continuously inhabited cities, is held sacred chiefly by:", o:["Hinduism","Zoroastrianism","Sikhism","Judaism"], a:0},
+  {c:"History", q:"At Sarnath near Varanasi, the Buddha delivered what is known in English simply as his:", o:["Final Vow","First Sermon","Coronation Speech","Farewell Address"], a:1},
+  {c:"History", q:"Before British annexation, Lucknow was the capital of which kingdom?", o:["Awadh (Oudh)","Rohilkhand","Bundelkhand","Kannauj"], a:0},
+  {c:"Geography", q:"Uttar Pradesh's fertile plains form part of the larger:", o:["Deccan Plateau","Indo-Gangetic Plain","Malwa Plateau","Coromandel Plain"], a:1},
+  {c:"Geography", q:"Which two rivers meet at the Sangam in Prayagraj (Allahabad)?", o:["Ganga and Yamuna","Ganga and Gomti","Yamuna and Chambal","Ganga and Sarayu"], a:0},
+  {c:"Geography", q:"Uttar Pradesh shares an international border to the north with:", o:["Bhutan","Nepal","Bangladesh","Myanmar"], a:1},
+  {c:"Geography", q:"The Chambal ravines lie in which part of Uttar Pradesh?", o:["Southern UP (Bundelkhand)","Eastern UP (Purvanchal)","Western UP (Doab)","Northern Terai belt"], a:0}
+]},
+"West Bengal": {region:"East", items:[
+  {c:"History", q:"Kolkata (Calcutta) served as the capital of British India until which year, when it shifted to Delhi?", o:["1891","1911","1931","1947"], a:1},
+  {c:"History", q:"The 19th-century Bengal Renaissance is closely associated with the reformer:", o:["Raja Ram Mohan Roy","Dadabhai Naoroji","Bal Gangadhar Tilak","Ishwar Chandra Gupta Rao"], a:0},
+  {c:"History", q:"The 1757 Battle of Plassey, which opened the door to British rule in Bengal, was fought against which Nawab?", o:["Mir Jafar","Siraj ud-Daulah","Alivardi Khan","Murshid Quli Khan"], a:1},
+  {c:"History", q:"Santiniketan, a noted centre of learning, was founded by the Nobel laureate:", o:["C.V. Raman","Rabindranath Tagore","Amartya Sen","Satyendra Nath Bose"], a:1},
+  {c:"Geography", q:"The Sundarbans mangrove forest lies in the delta formed mainly by which river system?", o:["Ganga–Brahmaputra","Godavari–Krishna","Mahanadi","Kaveri"], a:0},
+  {c:"Geography", q:"Darjeeling, famous for its tea, sits in the foothills of which mountain range?", o:["Aravalli Range","Eastern Himalayas","Western Ghats","Vindhya Range"], a:1},
+  {c:"Geography", q:"West Bengal's coastline lies along which bay?", o:["Bay of Bengal","Gulf of Khambhat","Gulf of Mannar","Arabian Sea"], a:0},
+  {c:"Geography", q:"Which flood-prone river has historically been called the \"Sorrow of Bengal\"?", o:["Hooghly","Damodar River","Teesta","Rupnarayan"], a:1}
+]},
+"Punjab": {region:"North", items:[
+  {c:"History", q:"The Golden Temple (Harmandir Sahib) at Amritsar was completed under which Sikh Guru?", o:["Guru Nanak Dev","Guru Arjan Dev","Guru Gobind Singh","Guru Tegh Bahadur"], a:1},
+  {c:"History", q:"The 1919 Jallianwala Bagh massacre took place in which Punjab city?", o:["Ludhiana","Patiala","Amritsar","Jalandhar"], a:2},
+  {c:"History", q:"The 19th-century Sikh Empire was consolidated chiefly under:", o:["Maharaja Ranjit Singh","Banda Singh Bahadur","Guru Gobind Singh","Hari Singh Nalwa"], a:0},
+  {c:"History", q:"In 1947, Punjab was partitioned primarily between India and:", o:["Pakistan","Afghanistan","Nepal","Tibet"], a:0},
+  {c:"Geography", q:"The name \"Punjab\" derives from Persian words meaning \"land of\":", o:["Five rivers","Three passes","Golden fields","Seven hills"], a:0},
+  {c:"Geography", q:"Which of these rivers does NOT flow through the historical Punjab region?", o:["Sutlej","Beas","Ravi","Godavari"], a:3},
+  {c:"Geography", q:"Punjab forms part of a larger fertile plain shared with Haryana, generally called the:", o:["Indo-Gangetic Plain","Malwa Plateau","Coromandel Plain","Deccan Plateau"], a:0},
+  {c:"Geography", q:"Because of its wheat and rice output, Punjab is often called the:", o:["Spice Bowl of India","Granary of India","Gold Coast of India","Silk Belt of India"], a:1}
+]},
+"Gujarat": {region:"West", items:[
+  {c:"History", q:"Lothal, an Indus Valley Civilisation site known for an ancient dockyard, is located in:", o:["Gujarat","Rajasthan","Punjab","Haryana"], a:0},
+  {c:"History", q:"Mahatma Gandhi was born in which Gujarat town?", o:["Rajkot","Porbandar","Bhavnagar","Surat"], a:1},
+  {c:"History", q:"The 1930 Dandi March (Salt March) began from which Gujarat site?", o:["Sabarmati Ashram","Somnath Temple","Champaner Fort","Dwarka"], a:0},
+  {c:"History", q:"The Solanki dynasty built which renowned Gujarat sun temple?", o:["Konark Sun Temple","Modhera Sun Temple","Martand Sun Temple","Suryanar Temple"], a:1},
+  {c:"Geography", q:"The Rann of Kutch is best described as a vast seasonal:", o:["Salt marsh","Rainforest","Volcanic plateau","Glacier field"], a:0},
+  {c:"Geography", q:"Gujarat has the longest coastline of any Indian state, running along the:", o:["Bay of Bengal","Arabian Sea","Laccadive Sea","Andaman Sea"], a:1},
+  {c:"Geography", q:"The Gir Forest, home to Asiatic lions, lies in which part of Gujarat?", o:["Saurashtra","Kutch","South Gujarat","North Gujarat"], a:0},
+  {c:"Geography", q:"Which river forms a notable estuary near Bharuch in Gujarat?", o:["Tapi","Sabarmati","Narmada","Mahi"], a:2}
+]},
+"Karnataka": {region:"South", items:[
+  {c:"History", q:"Hampi was the capital of which historical empire?", o:["Chola Empire","Vijayanagara Empire","Chalukya Empire","Hoysala Empire"], a:1},
+  {c:"History", q:"Mysore was ruled for centuries by which royal dynasty?", o:["Wadiyar dynasty","Hoysala dynasty","Kadamba dynasty","Ganga dynasty"], a:0},
+  {c:"History", q:"Tipu Sultan, the \"Tiger of Mysore,\" fought the British in a series of conflicts known as the:", o:["Carnatic Wars","Anglo-Mysore Wars","Anglo-Maratha Wars","Anglo-Sikh Wars"], a:1},
+  {c:"History", q:"The early Chalukya dynasty's capital, known for rock-cut temples, was at:", o:["Badami","Hampi","Belur","Halebidu"], a:0},
+  {c:"Geography", q:"Karnataka's coastal strip along the Arabian Sea is traditionally called the:", o:["Konkan","Karavali","Malabar","Coromandel"], a:1},
+  {c:"Geography", q:"Karnataka's western boundary runs along which range, part of the Western Ghats?", o:["Sahyadri","Aravalli","Satpura","Vindhya"], a:0},
+  {c:"Geography", q:"Bengaluru sits at an elevation on which plateau?", o:["Malwa Plateau","Deccan Plateau","Chota Nagpur Plateau","Shillong Plateau"], a:1},
+  {c:"Geography", q:"The Kaveri river originates in Karnataka at:", o:["Talakaveri","Mahabaleshwar","Amarkantak","Brahmagiri Hills (Nilgiris)"], a:0}
+]},
+"Madhya Pradesh": {region:"Central", items:[
+  {c:"History", q:"The Sanchi Stupa, a major Buddhist monument, was commissioned by which Mauryan emperor?", o:["Chandragupta Maurya","Bindusara","Ashoka","Dasharatha Maurya"], a:2},
+  {c:"History", q:"The temples of Khajuraho were built primarily under which dynasty?", o:["Chandela dynasty","Paramara dynasty","Kalachuri dynasty","Gurjara-Pratihara dynasty"], a:0},
+  {c:"History", q:"Gwalior Fort was long controlled by the Scindia family, rulers within which larger empire?", o:["Mughal Empire","Maratha Empire","Vijayanagara Empire","Sultanate of Delhi"], a:1},
+  {c:"History", q:"Mandu, known for its Afghan-influenced architecture, was the capital of the:", o:["Malwa Sultanate","Gujarat Sultanate","Bahmani Sultanate","Khandesh Sultanate"], a:0},
+  {c:"Geography", q:"Central Madhya Pradesh, often called the \"heart of India,\" lies chiefly on the:", o:["Malwa Plateau","Coromandel Plain","Chota Nagpur Plateau","Konkan coast"], a:0},
+  {c:"Geography", q:"The Narmada, a major west-flowing river, rises in Madhya Pradesh at:", o:["Amarkantak","Mahabaleshwar","Talakaveri","Gangotri"], a:0},
+  {c:"Geography", q:"Pachmarhi, Madhya Pradesh's only hill station, lies within which range?", o:["Satpura Range","Vindhya Range","Aravalli Range","Western Ghats"], a:0},
+  {c:"Geography", q:"Which river carves the famous ravines along part of Madhya Pradesh's northern border?", o:["Betwa","Chambal","Son","Tapi"], a:1}
+]},
+"Andhra Pradesh": {region:"South", items:[
+  {c:"History", q:"The ancient Buddhist site of Amaravati, famous for its stupa, flourished under which dynasty?", o:["Satavahana dynasty","Maurya dynasty","Gupta dynasty","Chola dynasty"], a:0},
+  {c:"History", q:"Tirupati's Venkateswara Temple received patronage over centuries from the Pallavas, Cholas and Vijayanagara kings — which of these is accurate?", o:["Only the Cholas patronised it","Only the Vijayanagara kings patronised it","None of them patronised it","All of the above patronised it"], a:3},
+  {c:"History", q:"The colonial-era \"Northern Circars,\" a coastal strip later part of Madras Presidency, correspond broadly to present-day:", o:["Coastal Andhra Pradesh","Rayalaseema","Telangana","Odisha"], a:0},
+  {c:"History", q:"Andhra State, India's first state formed on a linguistic basis, was created in which year?", o:["1947","1950","1953","1956"], a:2},
+  {c:"Geography", q:"Andhra Pradesh's fertile delta region is formed where the Krishna meets which other major river system nearby?", o:["Godavari","Kaveri","Tungabhadra","Penna"], a:0},
+  {c:"Geography", q:"Visakhapatnam, a major Andhra Pradesh port city, lies along which body of water?", o:["Arabian Sea","Bay of Bengal","Laccadive Sea","Gulf of Kutch"], a:1},
+  {c:"Geography", q:"The hill resort of Araku Valley lies in the Eastern Ghats near which Andhra Pradesh city?", o:["Visakhapatnam","Kurnool","Anantapur","Chittoor"], a:0},
+  {c:"Geography", q:"Which range separates coastal Andhra Pradesh from the interior Deccan plateau?", o:["Western Ghats","Eastern Ghats","Aravalli Range","Vindhya Range"], a:1}
+]},
+"Telangana": {region:"South", items:[
+  {c:"History", q:"Golconda Fort and its historic diamond trade flourished under which 16th–17th century dynasty?", o:["Qutb Shahi dynasty","Nizam Shahi dynasty","Adil Shahi dynasty","Bahmani dynasty"], a:0},
+  {c:"History", q:"The Kakatiya dynasty, builders of Warangal's Thousand Pillar Temple, ruled chiefly from:", o:["Hyderabad","Warangal","Golconda","Nizamabad"], a:1},
+  {c:"History", q:"Hyderabad city was founded in 1591 by which Qutb Shahi ruler?", o:["Muhammad Quli Qutb Shah","Ibrahim Qutb Shah","Abul Hasan Qutb Shah","Quli Qutb Shah"], a:0},
+  {c:"History", q:"Telangana was separated from Andhra Pradesh to become a new state in which year?", o:["2000","2009","2014","2019"], a:2},
+  {c:"Geography", q:"Telangana lies almost entirely on which plateau?", o:["Malwa Plateau","Deccan Plateau","Chota Nagpur Plateau","Shillong Plateau"], a:1},
+  {c:"Geography", q:"Hyderabad's well-known 16th-century artificial lake is called:", o:["Hussain Sagar","Osman Sagar","Himayat Sagar","Durgam Cheruvu"], a:0},
+  {c:"Geography", q:"Which major river flows centrally through northern Telangana?", o:["Godavari","Kaveri","Narmada","Tapi"], a:0},
+  {c:"Geography", q:"Telangana's Deccan terrain is predominantly underlain by which rock type?", o:["Granite","Basalt only","Limestone only","Sandstone only"], a:0}
+]},
+"Assam": {region:"Northeast", items:[
+  {c:"History", q:"The Ahom dynasty, which ruled Assam for roughly six centuries, originally migrated from:", o:["Myanmar (Burma)","Tibet","Bengal","Nepal"], a:0},
+  {c:"History", q:"The 1826 treaty that ceded Assam to the British East India Company was called the Treaty of:", o:["Yandabo","Sugauli","Amritsar","Lahore"], a:0},
+  {c:"History", q:"Which Ahom general is celebrated for defeating Mughal forces at the Battle of Saraighat (1671)?", o:["Lachit Borphukan","Madhavdev","Sankardev","Chilarai"], a:0},
+  {c:"History", q:"The Kamakhya Temple, an important Shakti Peetha near Guwahati, sits on which hill?", o:["Nilachal Hill","Navagraha Hill","Chitrachal Hill","Sandhyachal Hill"], a:0},
+  {c:"Geography", q:"Assam's fertile plains are shaped chiefly by which river?", o:["Brahmaputra","Ganga","Teesta","Barak"], a:0},
+  {c:"Geography", q:"Kaziranga National Park, famous for one-horned rhinos, lies in the floodplains of which river?", o:["Brahmaputra","Ganga","Godavari","Mahanadi"], a:0},
+  {c:"Geography", q:"Assam is one of India's leading producers of which crop, grown widely on its hill slopes and plains?", o:["Coffee","Tea","Cardamom","Cotton"], a:1},
+  {c:"Geography", q:"Majuli, one of the world's largest river islands, sits in which river?", o:["Brahmaputra","Ganga","Barak","Subansiri"], a:0}
+]},
+"Bihar": {region:"East", items:[
+  {c:"History", q:"Buddha attained enlightenment under the Bodhi Tree at which Bihar town?", o:["Bodh Gaya","Rajgir","Nalanda","Vaishali"], a:0},
+  {c:"History", q:"Ancient Nalanda was primarily a great centre of learning dedicated to which religion?", o:["Buddhism","Jainism","Zoroastrianism","Sikhism"], a:0},
+  {c:"History", q:"The Mauryan Empire's capital, Pataliputra, corresponds to which present-day Bihar city?", o:["Gaya","Patna","Muzaffarpur","Bhagalpur"], a:1},
+  {c:"History", q:"Chandragupta Maurya founded the Mauryan Empire with the guidance of the strategist:", o:["Chanakya (Kautilya)","Vishnugupta II","Ashvaghosha","Panini"], a:0},
+  {c:"Geography", q:"Bihar lies mainly within the plains of which major river?", o:["Ganga","Godavari","Krishna","Narmada"], a:0},
+  {c:"Geography", q:"The Son River, one of the Ganga's largest southern tributaries, meets the Ganga near which Bihar city?", o:["Gaya","Patna","Bhagalpur","Purnia"], a:1},
+  {c:"Geography", q:"Bihar shares its northern international border with:", o:["Nepal","Bhutan","Bangladesh","Myanmar"], a:0},
+  {c:"Geography", q:"Valmiki Tiger Reserve, in Bihar's forested north, lies near the foothills of which mountain range?", o:["Himalayas","Vindhya Range","Aravalli Range","Satpura Range"], a:0}
+]},
+"Chhattisgarh": {region:"Central", items:[
+  {c:"History", q:"Chhattisgarh was carved out as a separate state in 2000 from:", o:["Madhya Pradesh","Odisha","Maharashtra","Bihar"], a:0},
+  {c:"History", q:"Ratanpur, an old Chhattisgarh capital, was historically the seat of which dynasty?", o:["Kalachuri dynasty","Chandela dynasty","Solanki dynasty","Paramara dynasty"], a:0},
+  {c:"History", q:"The Bastar region of Chhattisgarh was ruled for centuries, until 1947, by a branch of which dynasty?", o:["Kakatiya dynasty","Chola dynasty","Hoysala dynasty","Ganga dynasty"], a:0},
+  {c:"History", q:"Chhattisgarh's name is popularly believed to reference how many ancient forts (\"garhs\") in the region?", o:["Twenty-four","Thirty-six","Forty-two","Eighteen"], a:1},
+  {c:"Geography", q:"Chhattisgarh lies mainly in the upper basin of which river?", o:["Mahanadi","Godavari","Narmada","Tapi"], a:0},
+  {c:"Geography", q:"Chitrakoot Falls, one of India's widest waterfalls, is located in which Chhattisgarh region?", o:["Bastar","Surguja","Raipur","Bilaspur"], a:0},
+  {c:"Geography", q:"Southern Chhattisgarh's terrain is dominated by which plateau?", o:["Bastar Plateau","Malwa Plateau","Marwar Plateau","Shillong Plateau"], a:0},
+  {c:"Geography", q:"Chhattisgarh is a leading producer of which mineral, especially in the Bastar-Dantewada belt?", o:["Iron ore","Copper","Bauxite","Gold"], a:0}
+]},
+"Goa": {region:"West", items:[
+  {c:"History", q:"Goa was a colony of which European power for over 450 years, until 1961?", o:["Portugal","France","Netherlands","Britain"], a:0},
+  {c:"History", q:"India's 1961 military action that ended colonial rule in Goa was called:", o:["Operation Vijay","Operation Polo","Operation Trident","Operation Cactus"], a:0},
+  {c:"History", q:"Old Goa's Basilica of Bom Jesus holds the remains of which Christian missionary saint?", o:["St. Francis Xavier","St. Thomas","St. Ignatius of Loyola","St. Anthony"], a:0},
+  {c:"History", q:"Before Portuguese rule, Goa was under the control of which Deccan sultanate?", o:["Bijapur Sultanate","Golconda Sultanate","Ahmednagar Sultanate","Berar Sultanate"], a:0},
+  {c:"Geography", q:"Goa's coastline lies along which sea?", o:["Bay of Bengal","Arabian Sea","Laccadive Sea only","Andaman Sea"], a:1},
+  {c:"Geography", q:"India's smallest state by area, Goa, lies along the western edge of which range?", o:["Western Ghats","Eastern Ghats","Aravalli Range","Vindhya Range"], a:0},
+  {c:"Geography", q:"Which is Goa's largest river, flowing past the capital Panaji?", o:["Zuari River","Mandovi River","Sal River","Chapora River"], a:1},
+  {c:"Geography", q:"Alongside tourism, Goa's economy has historically relied on the export of which mineral?", o:["Iron ore","Coal","Copper","Bauxite"], a:0}
+]},
+"Haryana": {region:"North", items:[
+  {c:"History", q:"The historic Battles of Panipat, which repeatedly shaped Indian history, were fought in present-day:", o:["Haryana","Punjab","Delhi","Uttar Pradesh"], a:0},
+  {c:"History", q:"The first Battle of Panipat (1526), won by Babur, established which empire in India?", o:["Mughal Empire","Maratha Empire","Delhi Sultanate","Sur Empire"], a:0},
+  {c:"History", q:"Kurukshetra, in Haryana, is traditionally held to be the setting of which epic battle?", o:["The Mahabharata war","The Ramayana war","The Kalinga War","The Battle of the Ten Kings"], a:0},
+  {c:"History", q:"Haryana was carved out as a separate state from Punjab in which year?", o:["1956","1966","1971","1980"], a:1},
+  {c:"Geography", q:"Haryana lies mainly within which larger fertile plain?", o:["Indo-Gangetic Plain","Malwa Plateau","Deccan Plateau","Coromandel Plain"], a:0},
+  {c:"Geography", q:"Which river forms part of Haryana's eastern border with Uttar Pradesh?", o:["Yamuna","Ganga","Sutlej","Chambal"], a:0},
+  {c:"Geography", q:"Haryana almost completely surrounds which Union Territory and national capital?", o:["Chandigarh","Delhi","Puducherry","Daman"], a:1},
+  {c:"Geography", q:"The Aravalli Range extends into southern Haryana near which city known for its rocky hills?", o:["Gurugram (Gurgaon)","Karnal","Panipat","Hisar"], a:0}
+]},
+"Himachal Pradesh": {region:"North", items:[
+  {c:"History", q:"The hill state of Himachal Pradesh was granted full statehood in which year?", o:["1966","1971","1975","1980"], a:1},
+  {c:"History", q:"Shimla, Himachal Pradesh's capital, served as the summer capital of which government?", o:["British India","Independent India only","Mughal Empire","Sikh Empire"], a:0},
+  {c:"History", q:"The ancient kingdom of Kangra is historically renowned for a distinct style of:", o:["Miniature painting","Stone carving","Bronze casting","Temple architecture only"], a:0},
+  {c:"History", q:"The Kinnaur and Lahaul-Spiti regions of Himachal Pradesh historically lay along trade routes connecting India with:", o:["Tibet","Persia","Central Asia via Kashmir only","Burma"], a:0},
+  {c:"Geography", q:"Himachal Pradesh lies almost entirely within which mountain system?", o:["Himalayas","Aravalli Range","Vindhya Range","Satpura Range"], a:0},
+  {c:"Geography", q:"The Rohtang Pass connects the Kullu Valley with which Himachal region?", o:["Lahaul-Spiti","Kinnaur","Chamba","Sirmaur"], a:0},
+  {c:"Geography", q:"Which river flows through the Kullu-Manali valley of Himachal Pradesh?", o:["Beas River","Sutlej River","Ravi River","Chenab River"], a:0},
+  {c:"Geography", q:"Himachal's Spiti Valley is called a \"cold desert\" for lying in the rain shadow of the:", o:["Great Himalayan Range","Aravalli Range","Western Ghats","Vindhya Range"], a:0}
+]},
+"Jharkhand": {region:"East", items:[
+  {c:"History", q:"Jharkhand was carved out of which state in the year 2000?", o:["Bihar","West Bengal","Odisha","Madhya Pradesh"], a:0},
+  {c:"History", q:"The Santhal Hul, an early large-scale tribal uprising against British rule (1855), took place in the region now called:", o:["Jharkhand","Chhattisgarh","Odisha","Assam"], a:0},
+  {c:"History", q:"Birsa Munda, a revered tribal freedom fighter honoured across Jharkhand, led a movement known as the:", o:["Ulgulan (Munda Rebellion)","Sepoy Mutiny","Indigo Revolt","Kuka Movement"], a:0},
+  {c:"History", q:"Jamshedpur, a major Jharkhand industrial city, is named after the founder of which company?", o:["Tata","Birla","Godrej","Bajaj"], a:0},
+  {c:"Geography", q:"Jharkhand lies mainly on which mineral-rich plateau?", o:["Chota Nagpur Plateau","Malwa Plateau","Deccan Plateau","Shillong Plateau"], a:0},
+  {c:"Geography", q:"Jharkhand is a leading producer of which mineral, especially around Jharia?", o:["Coal","Bauxite","Gold","Diamonds"], a:0},
+  {c:"Geography", q:"The Netarhat plateau, known for its sunrise and sunset views, lies in which part of Jharkhand?", o:["Western Jharkhand","Eastern Jharkhand","Northern Jharkhand","Southern Jharkhand"], a:0},
+  {c:"Geography", q:"Which river, central to the Damodar Valley Corporation projects, flows through Jharkhand?", o:["Damodar River","Subarnarekha River only","Koel River only","Barakar River only"], a:0}
+]},
+"Manipur": {region:"Northeast", items:[
+  {c:"History", q:"The World War II battles of Imphal and Kohima halted the advance of which army into India?", o:["Japanese Army","German Army","Italian Army","Ottoman Army"], a:0},
+  {c:"History", q:"Manipur's ancient kingdom was traditionally ruled for centuries by which royal lineage?", o:["Meitei (Ningthouja) dynasty","Ahom dynasty","Chutiya dynasty","Koch dynasty"], a:0},
+  {c:"History", q:"The modern sport of polo is widely believed to have developed from a traditional game, Sagol Kangjei, played in:", o:["Manipur","Punjab","Rajasthan","Kashmir"], a:0},
+  {c:"History", q:"Manipur attained full statehood within India in which year?", o:["1963","1972","1975","1987"], a:1},
+  {c:"Geography", q:"Manipur's central plain is home to a large freshwater lake known for its floating islands (phumdis):", o:["Loktak Lake","Chilika Lake","Wular Lake","Dal Lake"], a:0},
+  {c:"Geography", q:"Manipur is ringed by hills forming part of which broader Northeast Indian range system?", o:["Patkai Range","Aravalli Range","Vindhya Range","Nilgiri Hills"], a:0},
+  {c:"Geography", q:"Manipur shares an international border to its east with:", o:["Myanmar","China","Bangladesh","Bhutan"], a:0},
+  {c:"Geography", q:"Imphal, Manipur's capital, sits within a valley mostly surrounded by:", o:["Hills","Deserts","Glaciers","Plateaus"], a:0}
+]},
+"Meghalaya": {region:"Northeast", items:[
+  {c:"History", q:"Meghalaya was carved out of Assam and granted full statehood in which year?", o:["1963","1972","1975","1987"], a:1},
+  {c:"History", q:"The Khasi, Garo, and Jaintia are Meghalaya's principal:", o:["Tribal communities","Royal dynasties","Colonial provinces","River systems"], a:0},
+  {c:"History", q:"Traditional Khasi and Jaintia society is notable in India for following which system of lineage?", o:["Matrilineal system","Patrilineal system only","No family lineage system","Caste-based lineage only"], a:0},
+  {c:"History", q:"Cherrapunji and nearby Mawsynram in Meghalaya are famous worldwide for receiving among the highest recorded:", o:["Rainfall","Snowfall","Sunshine hours","Wind speeds"], a:0},
+  {c:"Geography", q:"Meghalaya's name literally translates to \"abode of the\":", o:["Clouds","Mountains","Rivers","Forests"], a:0},
+  {c:"Geography", q:"Which plateau forms the core of Meghalaya's terrain?", o:["Shillong Plateau","Malwa Plateau","Deccan Plateau","Chota Nagpur Plateau"], a:0},
+  {c:"Geography", q:"Living root bridges, grown from rubber tree roots, are a famous feature of Meghalaya's:", o:["Khasi Hills","Garo Hills only","Jaintia Hills only","Barak Valley"], a:0},
+  {c:"Geography", q:"Meghalaya shares an international border with:", o:["Bangladesh","Myanmar","Bhutan","China"], a:0}
+]},
+"Mizoram": {region:"Northeast", items:[
+  {c:"History", q:"Mizoram was granted full statehood in which year, after being a Union Territory?", o:["1972","1980","1987","1993"], a:2},
+  {c:"History", q:"The peace accord that ended a long-running insurgency in Mizoram, signed with the Mizo National Front, is dated to:", o:["The 1980s (1986 Mizo Accord)","The 1990s","The 1970s","The 2000s"], a:0},
+  {c:"History", q:"The Mautam famine, linked to bamboo flowering cycles, contributed to unrest and demands for statehood in:", o:["Mizoram","Manipur","Nagaland","Tripura"], a:0},
+  {c:"History", q:"Following 19th-century missionary activity, the predominant religion in Mizoram today is:", o:["Christianity","Hinduism","Buddhism","Islam"], a:0},
+  {c:"Geography", q:"Mizoram's terrain is characterised mostly by parallel hill ranges running in which general direction?", o:["North-south","East-west","Northeast-southwest","No clear pattern"], a:0},
+  {c:"Geography", q:"Mizoram shares international borders with Myanmar and which other country?", o:["Bangladesh","Bhutan","China","Nepal"], a:0},
+  {c:"Geography", q:"Mizoram's capital, Aizawl, is built along a ridge at a notably high:", o:["Elevation","Latitude only","Rainfall level only","River depth"], a:0},
+  {c:"Geography", q:"Mizoram lies within the Lushai Hills, part of which broader Northeast Indian hill system?", o:["Purvanchal Range","Aravalli Range","Vindhya Range","Nilgiri Hills"], a:0}
+]},
+"Nagaland": {region:"Northeast", items:[
+  {c:"History", q:"Nagaland became India's 16th state in which year?", o:["1957","1963","1972","1987"], a:1},
+  {c:"History", q:"A framework agreement addressing decades of Naga insurgency was signed with the Indian government in which year?", o:["2005","2010","2015","2020"], a:2},
+  {c:"History", q:"The Hornbill Festival, celebrating Naga culture, is held annually near which city?", o:["Kohima","Dimapur","Mokokchung","Tuensang"], a:0},
+  {c:"History", q:"Traditional Naga society was historically organised primarily around which unit of governance?", o:["Village councils","Centralised kingdoms","Provincial governors","Feudal estates"], a:0},
+  {c:"Geography", q:"Nagaland's terrain is predominantly:", o:["Hilly and mountainous","Flat plains","Desert","Coastal lowland"], a:0},
+  {c:"Geography", q:"Nagaland shares an international border to its east with:", o:["Myanmar","China","Bhutan","Bangladesh"], a:0},
+  {c:"Geography", q:"Mount Saramati, Nagaland's highest peak, lies near the border with:", o:["Myanmar","Bhutan","Tibet","Bangladesh"], a:0},
+  {c:"Geography", q:"Nagaland forms part of which broader mountain system of Northeast India?", o:["Patkai Range","Aravalli Range","Vindhya Range","Satpura Range"], a:0}
+]},
+"Odisha": {region:"East", items:[
+  {c:"History", q:"The Kalinga War (261 BCE), fought by Emperor Ashoka, took place in the region now called:", o:["Odisha","Bihar","West Bengal","Andhra Pradesh"], a:0},
+  {c:"History", q:"The devastation of the Kalinga War is said to have led Ashoka to embrace which faith?", o:["Buddhism","Jainism","Zoroastrianism","Christianity"], a:0},
+  {c:"History", q:"The Sun Temple at Konark was built under which dynasty?", o:["Eastern Ganga dynasty","Chola dynasty","Chandela dynasty","Solanki dynasty"], a:0},
+  {c:"History", q:"The Jagannath Temple at Puri, a major pilgrimage site, is dedicated to a form of which deity?", o:["Vishnu (as Jagannath)","Shiva","Brahma","Surya"], a:0},
+  {c:"Geography", q:"Odisha's coastline lies along which bay?", o:["Bay of Bengal","Gulf of Khambhat","Gulf of Mannar","Arabian Sea"], a:0},
+  {c:"Geography", q:"Chilika Lake, Asia's largest brackish-water lagoon, is located in:", o:["Odisha","West Bengal","Andhra Pradesh","Tamil Nadu"], a:0},
+  {c:"Geography", q:"The Eastern Ghats run through much of Odisha's interior, mainly:", o:["Inland, west of the coastal plains","Along the immediate coastline","In the extreme north only","Outside the state entirely"], a:0},
+  {c:"Geography", q:"Which flood-prone river, forming a major delta in Odisha, is sometimes called the \"Sorrow of Odisha\"?", o:["Mahanadi","Godavari","Krishna","Subarnarekha"], a:0}
+]},
+"Sikkim": {region:"Northeast", items:[
+  {c:"History", q:"Sikkim, once an independent kingdom under the Chogyal rulers, merged with India in which year?", o:["1947","1962","1975","1987"], a:2},
+  {c:"History", q:"Upon merging with India, Sikkim became the country's:", o:["18th state","20th state","22nd state","25th state"], a:2},
+  {c:"History", q:"Sikkim's Chogyal rulers traced their lineage to which Tibetan-origin dynasty?", o:["Namgyal dynasty","Ahom dynasty","Chutiya dynasty","Koch dynasty"], a:0},
+  {c:"History", q:"Rumtek Monastery, one of Sikkim's most significant Buddhist sites, belongs to which school of Tibetan Buddhism?", o:["Kagyu school","Gelug school only","Nyingma school only","Sakya school only"], a:0},
+  {c:"Geography", q:"Sikkim is home to Kangchenjunga, the world's third-highest peak, part of which range?", o:["Himalayas","Aravalli Range","Vindhya Range","Western Ghats"], a:0},
+  {c:"Geography", q:"India's least populous state, Sikkim lies between Nepal, Bhutan, and which country to its north?", o:["China (Tibet)","Myanmar","Bangladesh","Afghanistan"], a:0},
+  {c:"Geography", q:"Which river is the principal river draining Sikkim, later joining the Brahmaputra system?", o:["Teesta River","Beas River","Ravi River","Subansiri River"], a:0},
+  {c:"Geography", q:"In 2016 Sikkim was declared India's first fully what kind of agricultural state?", o:["Organic","Mechanised","Rain-fed","Export-only"], a:0}
+]},
+"Tripura": {region:"Northeast", items:[
+  {c:"History", q:"Tripura was ruled for centuries by which royal dynasty before merging with India in 1949?", o:["Manikya dynasty","Ahom dynasty","Koch dynasty","Chutiya dynasty"], a:0},
+  {c:"History", q:"Tripura attained full statehood within India in which year?", o:["1963","1972","1975","1987"], a:1},
+  {c:"History", q:"The ancient rock-cut carvings at Unakoti, a notable Tripura archaeological site, mainly depict:", o:["Hindu deities (Shaivite imagery)","Buddhist stupas","Jain tirthankaras","Islamic calligraphy"], a:0},
+  {c:"History", q:"Ujjayanta Palace in Agartala, Tripura's former royal residence, now functions mainly as a:", o:["Museum","Government secretariat","Military base","University"], a:0},
+  {c:"Geography", q:"Tripura is almost entirely surrounded by which neighbouring country?", o:["Bangladesh","Myanmar","Bhutan","Nepal"], a:0},
+  {c:"Geography", q:"Tripura's terrain consists mainly of hill ranges running in which general direction?", o:["North-south","East-west","Northeast-southwest","No clear pattern"], a:0},
+  {c:"Geography", q:"Which river, important to Tripura's capital Agartala, flows through the state?", o:["Gumti River","Teesta River","Beas River","Subansiri River"], a:0},
+  {c:"Geography", q:"Tripura's climate and vegetation are classified mainly as:", o:["Tropical monsoon with forests and bamboo","Arid desert","Alpine tundra","Mediterranean"], a:0}
+]},
+"Uttarakhand": {region:"North", items:[
+  {c:"History", q:"Uttarakhand was carved out of which state in the year 2000?", o:["Uttar Pradesh","Himachal Pradesh","Madhya Pradesh","Bihar"], a:0},
+  {c:"History", q:"The Chipko Movement, in which villagers embraced trees to prevent felling, began in Uttarakhand during which decade?", o:["The 1950s","The 1960s","The 1970s","The 1990s"], a:2},
+  {c:"History", q:"Haridwar and Rishikesh, major Uttarakhand pilgrimage towns, sit along the banks of which river?", o:["Ganga","Yamuna","Alaknanda","Bhagirathi"], a:0},
+  {c:"History", q:"Uttarakhand's Char Dham pilgrimage sites are Yamunotri, Gangotri, Kedarnath, and:", o:["Badrinath","Rishikesh","Haridwar","Joshimath"], a:0},
+  {c:"Geography", q:"Uttarakhand lies mainly within which mountain range?", o:["Himalayas (Central Himalayas)","Aravalli Range","Vindhya Range","Satpura Range"], a:0},
+  {c:"Geography", q:"The Ganga river originates from which Uttarakhand glacier?", o:["Gangotri Glacier","Siachen Glacier","Pindari Glacier only","Zemu Glacier"], a:0},
+  {c:"Geography", q:"Nanda Devi, India's second-highest peak, lies in which Uttarakhand region?", o:["Garhwal Himalayas","Kumaon plains","Terai belt","Shivalik foothills only"], a:0},
+  {c:"Geography", q:"Jim Corbett National Park, India's oldest national park, is located in which Uttarakhand district?", o:["Nainital district","Dehradun district","Almora district","Chamoli district"], a:0}
+]},
+"Arunachal Pradesh": {region:"Northeast", items:[
+  {c:"History", q:"Arunachal Pradesh, formerly the North-East Frontier Agency (NEFA), became a full state in which year?", o:["1972","1975","1987","1993"], a:2},
+  {c:"History", q:"The Tawang Monastery, one of the largest Buddhist monasteries in India, belongs to which tradition?", o:["Tibetan Buddhism","Theravada Buddhism","Zen Buddhism","Jainism"], a:0},
+  {c:"History", q:"Which is among Arunachal Pradesh's largest tribal communities?", o:["Nyishi","Bhil","Gond","Santhal"], a:0},
+  {c:"History", q:"Itanagar, Arunachal Pradesh's capital, takes its name from a nearby ancient fort called:", o:["Ita Fort","Kangla Fort","Rang Ghar","Talatal Ghar"], a:0},
+  {c:"Geography", q:"Arunachal Pradesh, India's easternmost state, lies mainly within which mountain system?", o:["Eastern Himalayas","Aravalli Range","Vindhya Range","Western Ghats"], a:0},
+  {c:"Geography", q:"Arunachal Pradesh shares international borders with Bhutan, Myanmar, and which other country?", o:["China","Nepal","Bangladesh","Pakistan"], a:0},
+  {c:"Geography", q:"The Siang River in Arunachal Pradesh later becomes which major river in Assam?", o:["Brahmaputra","Ganga","Teesta","Barak"], a:0},
+  {c:"Geography", q:"Being India's easternmost state, Arunachal Pradesh is the first place in the country to see the:", o:["Sunrise","Sunset","Monsoon onset","Snowfall"], a:0}
+]}
+};
+
+/* ============ STATE / SETUP DATA ============ */
+const STATE_NAMES = Object.keys(QUESTIONS);
+const REGIONS = ["All","North","South","East","West","Central","Northeast"];
+const CATEGORIES = ["Mixed","History","Geography"];
+const DURATIONS = [1, 2, 3, 5, 10];
+
+let selectedState = null;
+let selectedCategory = "Mixed";
+let selectedDuration = null;
+let activeRegion = "All";
+let searchTerm = "";
+
+let pool = [];
+let poolIndex = 0;
+let current = null;
+let timeLeft = 0;
+let totalTime = 0;
+let timerId = null;
+let score = 0;
+let answeredCount = 0;
+let streak = 0;
+let bestStreak = 0;
+let catStats = {};
+let locked = false;
+let history_log = [];
+
+const totalQCount = STATE_NAMES.reduce((sum,s) => sum + QUESTIONS[s].items.length, 0);
+document.getElementById('headerCount').textContent = `${STATE_NAMES.length} states · ${totalQCount} questions`;
+document.getElementById('stateCountFoot').textContent = `${STATE_NAMES.length} states available`;
+
+/* ============ BUILD SETUP UI ============ */
+const regionChipsEl = document.getElementById('regionChips');
+REGIONS.forEach(r => {
+  const chip = document.createElement('button');
+  chip.className = 'chip' + (r === 'All' ? ' active' : '');
+  chip.textContent = r;
+  chip.addEventListener('click', () => {
+    activeRegion = r;
+    document.querySelectorAll('#regionChips .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderStateGrid();
+  });
+  regionChipsEl.appendChild(chip);
+});
+
+const stateGrid = document.getElementById('stateGrid');
+function bestKey(state, cat, dur){ return `bharatquiz_best_${state}_${cat}_${dur}`; }
+function getBest(state, cat, dur){
+  const raw = localStorage.getItem(bestKey(state,cat,dur));
+  return raw ? JSON.parse(raw) : null;
+}
+
+function renderStateGrid(){
+  stateGrid.innerHTML = '';
+  const term = searchTerm.trim().toLowerCase();
+  let shown = 0;
+  STATE_NAMES.forEach(name => {
+    const meta = QUESTIONS[name];
+    const matchesRegion = activeRegion === 'All' || meta.region === activeRegion;
+    const matchesSearch = !term || name.toLowerCase().includes(term);
+    if(!matchesRegion || !matchesSearch) return;
+    shown++;
+    const btn = document.createElement('button');
+    btn.className = 'state-card' + (name === selectedState ? ' selected' : '');
+    let bestNote = '';
+    if(selectedDuration){
+      const b = getBest(name, selectedCategory, selectedDuration);
+      if(b) bestNote = `<span class="best">Best: ${b.score}/${b.total}</span>`;
+    }
+    btn.innerHTML = `<span class="region-tag">${meta.region}</span>${name}<span class="count">${meta.items.length} questions</span>${bestNote}`;
+    btn.addEventListener('click', () => {
+      selectedState = name;
+      renderStateGrid();
+      updateStartButton();
+    });
+    stateGrid.appendChild(btn);
+  });
+  document.getElementById('emptyNote').style.display = shown === 0 ? 'block' : 'none';
+}
+renderStateGrid();
+
+document.getElementById('stateSearch').addEventListener('input', (e) => {
+  searchTerm = e.target.value;
+  renderStateGrid();
+});
+
+const categoryRow = document.getElementById('categoryRow');
+CATEGORIES.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'pill-btn' + (cat === selectedCategory ? ' selected' : '');
+  btn.textContent = cat;
+  btn.addEventListener('click', () => {
+    selectedCategory = cat;
+    document.querySelectorAll('#categoryRow .pill-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    renderStateGrid();
+    updateStartButton();
+  });
+  categoryRow.appendChild(btn);
+});
+
+const durationRow = document.getElementById('durationRow');
+DURATIONS.forEach(min => {
+  const btn = document.createElement('button');
+  btn.className = 'duration-btn';
+  btn.innerHTML = `<span class="num">${min}</span><span class="unit">min${min>1?'s':''}</span>`;
+  btn.addEventListener('click', () => {
+    selectedDuration = min;
+    document.querySelectorAll('.duration-btn').forEach(el => el.classList.remove('selected'));
+    btn.classList.add('selected');
+    renderStateGrid();
+    updateStartButton();
+  });
+  durationRow.appendChild(btn);
+});
+
+function updateStartButton(){
+  const startBtn = document.getElementById('startBtn');
+  const hint = document.getElementById('setupHint');
+  if(selectedState && selectedDuration){
+    startBtn.disabled = false;
+    hint.textContent = `${selectedState} • ${selectedCategory} • ${selectedDuration} minute${selectedDuration>1?'s':''}`;
+  } else {
+    startBtn.disabled = true;
+    hint.textContent = 'Pick a state and a duration to begin';
+  }
+}
+
+document.getElementById('startBtn').addEventListener('click', startQuiz);
+document.getElementById('endEarlyBtn').addEventListener('click', () => finishQuiz());
+document.getElementById('retryBtn').addEventListener('click', () => { startQuiz(); });
+document.getElementById('changeStateBtn').addEventListener('click', () => { showScreen('setup'); });
+document.getElementById('reviewToggle').addEventListener('click', () => {
+  const list = document.getElementById('reviewList');
+  const toggle = document.getElementById('reviewToggle');
+  list.classList.toggle('open');
+  toggle.classList.toggle('open');
+});
+document.getElementById('copyResultBtn').addEventListener('click', () => {
+  const total = catStats.History.total + catStats.Geography.total;
+  const pct = total ? Math.round((score/total)*100) : 0;
+  const text = `Bharat Quiz — ${selectedState} (${selectedCategory}, ${selectedDuration} min)\nScore: ${score}/${total} (${pct}%)\nHistory: ${catStats.History.correct}/${catStats.History.total}  •  Geography: ${catStats.Geography.correct}/${catStats.Geography.total}`;
+  const btn = document.getElementById('copyResultBtn');
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => btn.textContent = orig, 1500);
+  }).catch(() => {});
+});
+
+/* ============ SCREEN SWITCH ============ */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if(name === 'setup'){ renderStateGrid(); }
+}
+
+/* ============ QUIZ LOGIC ============ */
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildSourcePool(){
+  const items = QUESTIONS[selectedState].items;
+  if(selectedCategory === 'Mixed') return items;
+  return items.filter(q => q.c === selectedCategory);
+}
+
+function refillPool(){
+  pool = shuffle(buildSourcePool());
+  poolIndex = 0;
+}
+
+function startQuiz(){
+  if(!selectedState || !selectedDuration) return;
+  score = 0;
+  answeredCount = 0;
+  streak = 0;
+  bestStreak = 0;
+  catStats = { History: {correct:0, total:0}, Geography: {correct:0, total:0} };
+  history_log = [];
+  totalTime = selectedDuration * 60;
+  timeLeft = totalTime;
+  refillPool();
+  document.getElementById('quizStateName').textContent = selectedState;
+  document.getElementById('quizRegion').textContent = `${QUESTIONS[selectedState].region} · ${selectedCategory}`;
+  showScreen('quiz');
+  nextQuestion();
+  clearInterval(timerId);
+  timerId = setInterval(tick, 1000);
+  updateTimerDisplay();
+}
+
+function tick(){
+  timeLeft--;
+  updateTimerDisplay();
+  if(timeLeft <= 0){
+    clearInterval(timerId);
+    finishQuiz();
+  }
+}
+
+function updateTimerDisplay(){
+  const m = Math.floor(Math.max(timeLeft,0) / 60);
+  const s = Math.max(timeLeft,0) % 60;
+  document.getElementById('timerDisplay').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  const pct = Math.max(0, (timeLeft/totalTime)*100);
+  const ring = document.getElementById('timerRing');
+  ring.style.setProperty('--pct', pct.toFixed(1));
+  ring.classList.toggle('low', timeLeft <= 10);
+}
+
+function updateStatStrip(){
+  document.getElementById('scoreLive').textContent = score;
+  document.getElementById('questionLive').textContent = answeredCount;
+  const total = catStats.History.total + catStats.Geography.total;
+  const pct = total ? Math.round((score/total)*100) : 0;
+  document.getElementById('accuracyLive').textContent = pct + '%';
+  const streakWrap = document.getElementById('streakWrap');
+  if(streak >= 2){
+    streakWrap.style.display = 'inline';
+    document.getElementById('streakLive').textContent = `🔥 ${streak} in a row`;
+  } else {
+    streakWrap.style.display = 'none';
+  }
+}
+
+function nextQuestion(){
+  if(pool.length === 0){ finishQuiz(); return; }
+  if(poolIndex >= pool.length) refillPool();
+  current = pool[poolIndex++];
+  locked = false;
+  answeredCount++;
+  document.getElementById('qCategory').textContent = current.c;
+  document.getElementById('qText').textContent = current.q;
+  updateStatStrip();
+
+  const optWrap = document.getElementById('qOptions');
+  optWrap.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  current.o.forEach((text, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="letter">${letters[idx]}</span><span>${text}</span>`;
+    btn.addEventListener('click', () => selectOption(idx, btn));
+    optWrap.appendChild(btn);
+  });
+}
+
+function selectOption(idx, btnEl){
+  if(locked || timeLeft <= 0) return;
+  locked = true;
+  const options = document.querySelectorAll('.option');
+  options.forEach(o => o.classList.add('locked'));
+
+  catStats[current.c].total++;
+  const isCorrect = idx === current.a;
+  if(isCorrect){
+    score++;
+    streak++;
+    bestStreak = Math.max(bestStreak, streak);
+    btnEl.classList.add('correct');
+    catStats[current.c].correct++;
+  } else {
+    streak = 0;
+    btnEl.classList.add('wrong');
+    options[current.a].classList.add('correct');
+  }
+  updateStatStrip();
+
+  history_log.push({
+    q: current.q, c: current.c, options: current.o,
+    yourAnswer: current.o[idx], correctAnswer: current.o[current.a], isCorrect
+  });
+
+  setTimeout(() => {
+    if(timeLeft > 0) nextQuestion();
+  }, 850);
+}
+
+document.addEventListener('keydown', (e) => {
+  if(!document.getElementById('screen-quiz').classList.contains('active')) return;
+  if(locked) return;
+  const map = {'1':0,'2':1,'3':2,'4':3};
+  if(map.hasOwnProperty(e.key)){
+    const opts = document.querySelectorAll('.option');
+    if(opts[map[e.key]]) opts[map[e.key]].click();
+  }
+});
+
+function finishQuiz(){
+  clearInterval(timerId);
+  const totalAnswered = catStats.History.total + catStats.Geography.total;
+  const pct = totalAnswered ? Math.round((score/totalAnswered)*100) : 0;
+
+  document.getElementById('resultsStateLabel').textContent = `Results — ${selectedState} (${selectedCategory})`;
+  document.getElementById('resultScore').textContent = `${score} / ${totalAnswered}`;
+  document.getElementById('resultAccuracy').textContent = `${pct}% correct · best streak ${bestStreak}`;
+  document.getElementById('statHistory').textContent = `${catStats.History.correct} / ${catStats.History.total}`;
+  document.getElementById('statGeo').textContent = `${catStats.Geography.correct} / ${catStats.Geography.total}`;
+  const hPct = catStats.History.total ? (catStats.History.correct/catStats.History.total)*100 : 0;
+  const gPct = catStats.Geography.total ? (catStats.Geography.correct/catStats.Geography.total)*100 : 0;
+  document.getElementById('barHistory').style.width = hPct + '%';
+  document.getElementById('barGeo').style.width = gPct + '%';
+
+  const key = bestKey(selectedState, selectedCategory, selectedDuration);
+  const prevBest = getBest(selectedState, selectedCategory, selectedDuration);
+  let isNewBest = false;
+  if(totalAnswered > 0){
+    if(!prevBest || pct > prevBest.pct || (pct === prevBest.pct && score > prevBest.score)){
+      localStorage.setItem(key, JSON.stringify({score, total: totalAnswered, pct}));
+      isNewBest = true;
+    }
+  }
+  document.getElementById('newBestBadge').style.display = isNewBest ? 'block' : 'none';
+  const bl = document.getElementById('bestLine');
+  const finalBest = getBest(selectedState, selectedCategory, selectedDuration);
+  bl.textContent = finalBest ? `Personal best for this setup: ${finalBest.score}/${finalBest.total}` : '';
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+  history_log.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'review-item ' + (item.isCorrect ? 'right' : 'wrong');
+    div.innerHTML = `
+      <div class="rcat">${item.c}</div>
+      <div class="rq">${item.q}</div>
+      <div class="ra">${item.isCorrect
+        ? `Your answer: <span class="correct-ans">${item.yourAnswer}</span> ✓`
+        : `Your answer: <span class="your">${item.yourAnswer}</span> — Correct: <span class="correct-ans">${item.correctAnswer}</span>`}</div>
+    `;
+    reviewList.appendChild(div);
+  });
+  document.getElementById('reviewList').classList.remove('open');
+  document.getElementById('reviewToggle').classList.remove('open');
+
+  showScreen('results');
+  if(pct >= 70 && totalAnswered >= 3) launchConfetti();
+}
+
+/* ============ CONFETTI ============ */
+function launchConfetti(){
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const colors = ['#233c53','#a97b34','#3f6b52','#9c4638','#dcdcd2'];
+  const pieces = Array.from({length: 90}, () => ({
+    x: Math.random()*canvas.width,
+    y: -20 - Math.random()*canvas.height*0.5,
+    r: 4 + Math.random()*5,
+    c: colors[Math.floor(Math.random()*colors.length)],
+    vy: 2 + Math.random()*3,
+    vx: -1.5 + Math.random()*3,
+    rot: Math.random()*360,
+    vr: -6 + Math.random()*12
+  }));
+  let frame = 0;
+  function draw(){
+    frame++;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.6);
+      ctx.restore();
+    });
+    if(frame < 140){
+      requestAnimationFrame(draw);
+    } else {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+  }
+  draw();
+}
+window.addEventListener('resize', () => {
+  const canvas = document.getElementById('confettiCanvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>
