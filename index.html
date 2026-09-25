@@ -463,6 +463,31 @@
 
   #confettiCanvas{ position:fixed; inset:0; pointer-events:none; z-index:50; }
 
+  .credit{
+    text-align:center;
+    margin-top:18px;
+    padding-top:16px;
+  }
+  .credit-line{
+    font-family:var(--serif);
+    font-size:13px;
+    color:var(--ink-soft);
+    letter-spacing:.02em;
+  }
+  .credit-link{
+    display:inline-block;
+    margin-top:4px;
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:13px;
+    color:var(--navy);
+    text-decoration:none;
+    border-bottom:1px solid var(--line);
+    padding-bottom:1px;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .credit-link:hover{ color:var(--gold); border-color:var(--gold); }
+
   @media (prefers-reduced-motion: reduce){
     .screen.active{ animation:none; }
     .option.correct, .option.wrong{ animation:none; }
@@ -585,6 +610,10 @@
     <span>Questions are drawn at random and repeat if a round runs long.</span>
     <span id="stateCountFoot"></span>
   </footer>
+  <div class="credit">
+    <div class="credit-line">MADE WITH ❤️ BY KunalDebugs</div>
+    <a class="credit-link" href="https://github.com/KunalDebugs" target="_blank" rel="noopener noreferrer">my@github-->KunalDebugs</a>
+  </div>
 
 </div>
 
